@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
@@ -114,7 +115,7 @@ export default function ChatPage() {
       
       if (response.ok) {
         setCurrentConversationId(conversationId);
-        setMessages(data.conversation.messages.map((msg: any) => ({
+        setMessages(data.conversation.messages.map((msg: { id: string; content: string; role: string; timestamp: string; imageUrls?: string[] }) => ({
           ...msg,
           timestamp: new Date(msg.timestamp)
         })));
@@ -278,7 +279,7 @@ export default function ChatPage() {
           timestamp: new Date()
         }]);
       }
-    } catch (error) {
+    } catch {
       setMessages([...newMessages, { 
         role: "assistant", 
         content: "Disculpa, estoy experimentando dificultades técnicas. Por favor intenta de nuevo.",
@@ -612,10 +613,12 @@ export default function ChatPage() {
                     {message.images && message.images.length > 0 && (
                       <div className="grid grid-cols-2 gap-2 mb-3">
                         {message.images.map((image, imgIndex) => (
-                          <img
+                          <Image
                             key={imgIndex}
                             src={image}
                             alt={`Imagen médica ${imgIndex + 1}`}
+                            width={300}
+                            height={200}
                             className="rounded-lg max-w-full h-auto border border-gray-200 dark:border-gray-600"
                           />
                         ))}
@@ -713,9 +716,11 @@ export default function ChatPage() {
               <div className="flex flex-wrap gap-2">
                 {selectedImages.map((image, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={image}
                       alt={`Imagen ${index + 1}`}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
                     />
                     <button

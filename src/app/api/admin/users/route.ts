@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
-import { UserRole, UserStatus } from "@prisma/client"
+import { UserRole } from "@prisma/client"
 
 // GET - Listar todos los usuarios (Solo SUPERADMIN y ADMIN)
 export async function GET() {

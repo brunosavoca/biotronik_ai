@@ -13,7 +13,6 @@ import {
   UserPlus, 
   Edit,
   Trash,
-  Cog,
   Eye,
   EyeSlash,
   Users,
@@ -186,16 +185,14 @@ export default function AdminPage() {
     setEditLoading(true)
 
     try {
-      const updateData = { ...editUser }
-      // Only include password if it's not empty
-      if (!updateData.password) {
-        delete updateData.password
-      }
+      // Create updateData without password first, then conditionally add it
+      const { password, ...updateData } = editUser;
+      const finalData = password ? { ...updateData, password } : updateData;
 
       const response = await fetch(`/api/admin/users/${editingUser.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData)
+        body: JSON.stringify(finalData)
       })
 
       if (response.ok) {

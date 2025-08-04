@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { signIn, getSession } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -13,8 +13,8 @@ export default function SignInPage() {
   const [error, setError] = useState("")
   
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+  // const searchParams = useSearchParams()
+  // const callbackUrl = searchParams.get("callbackUrl") || "/"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,7 +39,7 @@ export default function SignInPage() {
           router.push("/chat")
         }
       }
-    } catch (error) {
+    } catch {
       setError("Error al iniciar sesión")
     } finally {
       setIsLoading(false)

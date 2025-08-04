@@ -93,7 +93,16 @@ export async function PUT(
     }
 
     // Preparar datos de actualización
-    const updateData: any = {
+    const updateData: {
+      name?: string;
+      email?: string;
+      role?: UserRole;
+      status?: UserStatus;
+      specialty?: string;
+      licenseNumber?: string;
+      hospital?: string;
+      password?: string;
+    } = {
       name,
       email,
       role,

@@ -6,7 +6,7 @@ import { prisma } from "./prisma"
 import { UserRole, UserStatus } from "@prisma/client"
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: PrismaAdapter(prisma) as NextAuthOptions['adapter'],
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -49,8 +49,8 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.name,
           role: user.role,
-          specialty: user.specialty,
-          hospital: user.hospital
+          specialty: user.specialty || undefined,
+          hospital: user.hospital || undefined
         }
       }
     })
@@ -61,9 +61,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role
-        token.specialty = (user as any).specialty
-        token.hospital = (user as any).hospital
+        token.role = (user as { role: UserRole }).role
+        token.specialty = (user as { specialty?: string }).specialty
+        token.hospital = (user as { hospital?: string }).hospital
       }
       return token
     },
