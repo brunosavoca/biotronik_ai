@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 12)
 
     // Determinar el rol basado en el email
-    let role = UserRole.USER
+    let role: UserRole = UserRole.USER
     if (email.toLowerCase() === "bruno@biotronik.ai") {
       role = UserRole.SUPERADMIN
     } else if (email.toLowerCase() === "alfredo@biotronik.ai") {
