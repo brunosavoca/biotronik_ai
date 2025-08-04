@@ -10,8 +10,6 @@ import {
   Building,
   User,
   UserCheck, 
-  UserPlus, 
-  Edit,
   Trash,
   Eye,
   EyeSlash,
@@ -40,33 +38,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [createLoading, setCreateLoading] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [editLoading, setEditLoading] = useState(false)
-  const [editingUser, setEditingUser] = useState<User | null>(null)
 
-  // Form state para crear usuario
-  const [newUser, setNewUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "USER",
-    specialty: "",
-    licenseNumber: "",
-    hospital: ""
-  })
-
-  // Form state para editar usuario
-  const [editUser, setEditUser] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "USER",
-    specialty: "",
-    licenseNumber: "",
-    hospital: ""
-  })
 
   useEffect(() => {
     if (status === "loading") return
@@ -91,40 +63,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleCreateUser = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setCreateLoading(true)
 
-    try {
-      const response = await fetch("/api/admin/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser)
-      })
-
-      if (response.ok) {
-        setShowCreateModal(false)
-        setNewUser({
-          name: "",
-          email: "",
-          password: "",
-          role: "USER",
-          specialty: "",
-          licenseNumber: "",
-          hospital: ""
-        })
-        loadUsers()
-      } else {
-        const error = await response.json()
-        alert(error.error || "Error al crear usuario")
-      }
-    } catch (error) {
-      console.error("Error creando usuario:", error)
-      alert("Error al crear usuario")
-    } finally {
-      setCreateLoading(false)
-    }
-  }
 
   const handleStatusChange = async (userId: string, newStatus: string) => {
     try {
@@ -164,61 +103,7 @@ export default function AdminPage() {
     }
   }
 
-  const handleEditUser = (user: User) => {
-    setEditingUser(user)
-    setEditUser({
-      name: user.name,
-      email: user.email,
-      password: "", // Password field will be optional for updates
-      role: user.role,
-      specialty: user.specialty || "",
-      licenseNumber: user.licenseNumber || "",
-      hospital: user.hospital || ""
-    })
-    setShowEditModal(true)
-  }
 
-  const handleUpdateUser = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!editingUser) return
-
-    setEditLoading(true)
-
-    try {
-      // Create updateData without password first, then conditionally add it
-      const { password, ...updateData } = editUser;
-      const finalData = password ? { ...updateData, password } : updateData;
-
-      const response = await fetch(`/api/admin/users/${editingUser.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalData)
-      })
-
-      if (response.ok) {
-        setShowEditModal(false)
-        setEditingUser(null)
-        setEditUser({
-          name: "",
-          email: "",
-          password: "",
-          role: "USER",
-          specialty: "",
-          licenseNumber: "",
-          hospital: ""
-        })
-        loadUsers()
-      } else {
-        const error = await response.json()
-        alert(error.error || "Error al actualizar usuario")
-      }
-    } catch (error) {
-      console.error("Error actualizando usuario:", error)
-      alert("Error al actualizar usuario")
-    } finally {
-      setEditLoading(false)
-    }
-  }
 
   const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -258,44 +143,39 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-                <Building className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Panel de Administración
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Gestión de usuarios - {session?.user?.name} ({session?.user?.role})
-                </p>
-              </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      {/* Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+              <Building className="w-6 h-6 text-white" />
             </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/chat">
-                <Button variant="outline" size="sm">
-                  💬 Chat
-                </Button>
-              </Link>
-              <Button
-                onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-                variant="outline"
-                size="sm"
-              >
-                Cerrar Sesión
-              </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Panel de Administración
+              </h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Gestión de usuarios - {session?.user?.name} ({session?.user?.role})
+              </p>
             </div>
           </div>
+          <div className="flex items-center space-x-4">
+            <Link href="/chat">
+              <Button variant="outline" size="sm">
+                💬 Chat
+              </Button>
+            </Link>
+            <Button
+              onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+              variant="outline"
+              size="sm"
+            >
+              Cerrar Sesión
+            </Button>
+          </div>
         </div>
-      </header>
-
-      {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="medical-card card-hover">
@@ -358,13 +238,11 @@ export default function AdminPage() {
               className="w-full"
             />
           </div>
-          <Button
-            onClick={() => setShowCreateModal(true)}
-            className="ml-4 bg-red-500 hover:bg-red-600 text-white"
-          >
-            <UserPlus className="w-4 h-4 mr-2" />
-            Nuevo Usuario
-          </Button>
+          <Link href="/form">
+            <Button className="ml-4 bg-blue-600 hover:bg-blue-700 text-white">
+              📋 Formulario Médico
+            </Button>
+          </Link>
         </div>
 
         {/* Users Table */}
@@ -431,17 +309,6 @@ export default function AdminPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                      {session?.user?.role === "SUPERADMIN" && (
-                        <Button
-                          onClick={() => handleEditUser(user)}
-                          variant="outline"
-                          size="sm"
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          <Edit className="w-4 h-4 mr-1" />
-                        Editar
-                        </Button>
-                      )}
                       {user.status === "ACTIVE" ? (
                         <Button
                           onClick={() => handleStatusChange(user.id, "INACTIVE")}
@@ -482,236 +349,6 @@ export default function AdminPage() {
           </div>
         </div>
       </main>
-
-      {/* Create User Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Crear Nuevo Usuario
-            </h3>
-            <form onSubmit={handleCreateUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Nombre completo
-                </label>
-                <Input
-                  type="text"
-                  required
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({...newUser, name: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email
-                </label>
-                <Input
-                  type="email"
-                  required
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({...newUser, email: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Contraseña
-                </label>
-                <Input
-                  type="password"
-                  required
-                  value={newUser.password}
-                  onChange={(e) => setNewUser({...newUser, password: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Rol
-                </label>
-                <select
-                  value={newUser.role}
-                  onChange={(e) => setNewUser({...newUser, role: e.target.value})}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  <option value="USER">Usuario</option>
-                  <option value="ADMIN">Administrador</option>
-                  {session?.user?.role === "SUPERADMIN" && (
-                    <option value="SUPERADMIN">Super Administrador</option>
-                  )}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Especialidad
-                </label>
-                <Input
-                  type="text"
-                  value={newUser.specialty}
-                  onChange={(e) => setNewUser({...newUser, specialty: e.target.value})}
-                  className="mt-1"
-                  placeholder="Cardiología, Medicina Interna, etc."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Hospital/Institución
-                </label>
-                <Input
-                  type="text"
-                  value={newUser.hospital}
-                  onChange={(e) => setNewUser({...newUser, hospital: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div className="flex justify-end space-x-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowCreateModal(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={createLoading}
-                  className="bg-red-500 hover:bg-red-600 text-white"
-                >
-                  {createLoading ? "Creando..." : "Crear Usuario"}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Edit User Modal */}
-      {showEditModal && editingUser && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              Editar Usuario: {editingUser.name}
-            </h3>
-            <form onSubmit={handleUpdateUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Nombre completo
-                </label>
-                <Input
-                  type="text"
-                  required
-                  value={editUser.name}
-                  onChange={(e) => setEditUser({...editUser, name: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email
-                </label>
-                <Input
-                  type="email"
-                  required
-                  value={editUser.email}
-                  onChange={(e) => setEditUser({...editUser, email: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Contraseña (dejar vacío para no cambiar)
-                </label>
-                <Input
-                  type="password"
-                  value={editUser.password}
-                  onChange={(e) => setEditUser({...editUser, password: e.target.value})}
-                  className="mt-1"
-                  placeholder="Nueva contraseña (opcional)"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Rol
-                </label>
-                <select
-                  value={editUser.role}
-                  onChange={(e) => setEditUser({...editUser, role: e.target.value})}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                >
-                  <option value="USER">Usuario</option>
-                  <option value="ADMIN">Administrador</option>
-                  <option value="SUPERADMIN">Super Administrador</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Especialidad
-                </label>
-                <Input
-                  type="text"
-                  value={editUser.specialty}
-                  onChange={(e) => setEditUser({...editUser, specialty: e.target.value})}
-                  className="mt-1"
-                  placeholder="Cardiología, Medicina Interna, etc."
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Número de Licencia
-                </label>
-                <Input
-                  type="text"
-                  value={editUser.licenseNumber}
-                  onChange={(e) => setEditUser({...editUser, licenseNumber: e.target.value})}
-                  className="mt-1"
-                  placeholder="Número de licencia médica"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Hospital/Institución
-                </label>
-                <Input
-                  type="text"
-                  value={editUser.hospital}
-                  onChange={(e) => setEditUser({...editUser, hospital: e.target.value})}
-                  className="mt-1"
-                />
-              </div>
-              <div className="flex justify-end space-x-3 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowEditModal(false)
-                    setEditingUser(null)
-                    setEditUser({
-                      name: "",
-                      email: "",
-                      password: "",
-                      role: "USER",
-                      specialty: "",
-                      licenseNumber: "",
-                      hospital: ""
-                    })
-                  }}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={editLoading}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  {editLoading ? "Actualizando..." : "Actualizar Usuario"}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
