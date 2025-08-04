@@ -6,15 +6,13 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
+import dynamic from 'next/dynamic';
 import { 
   Menu, 
   X, 
   Plus, 
   Send, 
-  Image as ImageIcon, 
+  ImageIcon, 
   Copy, 
   Check, 
   Trash,
@@ -23,7 +21,20 @@ import {
   User,
   UserCircle,
   Cog
-} from "@mynaui/icons-react";
+} from "@/lib/icons";
+
+// Lazy load heavy markdown components
+const ReactMarkdown = dynamic(() => import('react-markdown'), {
+  loading: () => <div className="animate-pulse">Cargando...</div>,
+});
+
+const remarkGfm = dynamic(() => import('remark-gfm').then(mod => mod.default), {
+  ssr: false,
+});
+
+const rehypeHighlight = dynamic(() => import('rehype-highlight').then(mod => mod.default), {
+  ssr: false,
+});
 
 interface Message {
   role: "user" | "assistant";

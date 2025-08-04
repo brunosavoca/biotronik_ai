@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import React from "react";
 
-export function NavBar() {
+export const NavBar = React.memo(function NavBar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   
@@ -39,4 +40,4 @@ export function NavBar() {
       </div>
     </nav>
   );
-}
+});

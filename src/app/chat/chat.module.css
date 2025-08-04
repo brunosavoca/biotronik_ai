@@ -1,0 +1,34 @@
+/* Chat-specific styles */
+.quickButtonEnter {
+  animation: quickButtonEnter 0.5s ease-out;
+}
+
+.messageAppear {
+  animation: messageAppear 0.3s ease-out;
+}
+
+.buttonPress:active {
+  transform: scale(0.95);
+}
+
+@keyframes quickButtonEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
