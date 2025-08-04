@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "seed": "npx ts-node src/scripts/seed.ts"
+    "seed": "npx ts-node src/scripts/seed.ts",
+    "analyze": "ANALYZE=true npm run build",
+    "optimize:images": "npx svgo public/*.svg --multipass"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -43,9 +45,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
+    "svgo": "^4.0.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tw-animate-css": "^1.3.6",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

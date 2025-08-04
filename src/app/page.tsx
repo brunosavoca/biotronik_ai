@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-import { Building, Heart, Cog, Message } from "@mynaui/icons-react";
+import { Building, Heart, Cog, Message } from "@/lib/icons";
 
 export default function Home() {
   const { data: session } = useSession();

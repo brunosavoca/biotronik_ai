@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon } from "@/lib/icons";
 
 export default function Confirmacion() {
   return (
