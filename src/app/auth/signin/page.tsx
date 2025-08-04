@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { signIn, getSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -111,7 +112,16 @@ export default function SignInPage() {
           </Button>
         </form>
 
-        <div className="text-center">
+        <div className="text-center space-y-2">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            ¿No tienes una cuenta?{" "}
+            <Link 
+              href="/auth/signup" 
+              className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+            >
+              Regístrate aquí
+            </Link>
+          </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Solo para profesionales médicos autorizados
           </p>
