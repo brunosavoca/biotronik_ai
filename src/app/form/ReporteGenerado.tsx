@@ -125,9 +125,36 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
           }
           
           .content {
-            white-space: pre-line;
             font-size: 14px;
             line-height: 1.8;
+          }
+          
+          .content h3 {
+            color: #1e40af;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+          }
+          
+          .content p {
+            margin: 10px 0;
+            text-align: justify;
+          }
+          
+          .content strong {
+            font-weight: bold;
+            color: #374151;
+          }
+          
+          .content ul {
+            margin: 10px 0;
+            padding-left: 20px;
+          }
+          
+          .content li {
+            margin: 5px 0;
           }
           
           .footer {
@@ -161,7 +188,7 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
         </div>
         
         <div class="content">
-          ${reporte.replace(/\n/g, '<br>')}
+          ${reporte}
         </div>
         
         <div class="footer">
@@ -277,14 +304,50 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
           </div>
           
           <div className="p-8">
-            <div className="prose max-w-none">
+            <div className="prose prose-lg max-w-none">
               <div 
-                className="whitespace-pre-line text-gray-800 leading-relaxed"
+                className="text-gray-800 leading-relaxed medical-report"
                 style={{ fontFamily: 'Georgia, serif', fontSize: '16px', lineHeight: '1.7' }}
-              >
-                {reporte}
-              </div>
+                dangerouslySetInnerHTML={{ __html: reporte }}
+              />
             </div>
+            
+            <style jsx>{`
+              .medical-report h3 {
+                color: #1e40af;
+                font-weight: bold;
+                font-size: 18px;
+                margin: 25px 0 15px 0;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 8px;
+              }
+              
+              .medical-report p {
+                margin: 12px 0;
+                text-align: justify;
+                line-height: 1.8;
+              }
+              
+              .medical-report strong {
+                font-weight: bold;
+                color: #374151;
+              }
+              
+              .medical-report ul {
+                margin: 15px 0;
+                padding-left: 25px;
+              }
+              
+              .medical-report li {
+                margin: 8px 0;
+                line-height: 1.6;
+              }
+              
+              .medical-report em {
+                font-style: italic;
+                color: #6b7280;
+              }
+            `}</style>
           </div>
           
           <div className="bg-gray-50 p-4 border-t text-center text-sm text-gray-600">

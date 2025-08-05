@@ -45,7 +45,7 @@ ECG:
 
 SOLICITUD: ${formData.tipoSolicitud}
 
-Por favor, genera un informe médico completo que incluya:
+Por favor, genera un informe médico completo en formato HTML limpio que incluya:
 
 1. HISTORIA CLÍNICA RESUMIDA: Resumen profesional del caso clínico
 
@@ -55,7 +55,12 @@ Por favor, genera un informe médico completo que incluya:
 
 4. CONCLUSIÓN: Recomendación clara para la obra social
 
-El informe debe estar redactado en terminología médica profesional argentina, siguiendo el formato estándar para presentaciones a obras sociales.
+IMPORTANTE: 
+- Utiliza formato HTML con etiquetas <h3>, <p>, <strong>, <em>, <ul>, <li> para estructurar el contenido
+- NO uses markdown (**, *, etc.)
+- Utiliza terminología médica profesional argentina
+- Sigue el formato estándar para presentaciones a obras sociales
+- Estructura el contenido de forma clara y profesional
 `;
 
     const completion = await openai.chat.completions.create({
@@ -70,8 +75,8 @@ El informe debe estar redactado en terminología médica profesional argentina, 
           content: prompt
         }
       ],
-      temperature: 0.3,
-      max_tokens: 2000
+      // temperature: 0.3,
+      // max_tokens: 2000
     });
 
     const reporte = completion.choices[0].message.content;
