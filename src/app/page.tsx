@@ -32,12 +32,20 @@ export default function Home() {
                 </Link>
               )}
               {session && (
-                <Link href="/chat">
-                  <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                    <Message className="w-4 h-4" />
-                    <span>Chat</span>
-                  </Button>
-                </Link>
+                <>
+                  <Link href="/chat">
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                      <Message className="w-4 h-4" />
+                      <span>Chat</span>
+                    </Button>
+                  </Link>
+                  <Link href="/form">
+                    <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                      <span className="text-sm">📋</span>
+                      <span>Formulario</span>
+                    </Button>
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -61,20 +69,51 @@ export default function Home() {
               Asistente IA para Cardiólogos
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-lg mx-auto">
-              Soporte avanzado de IA para medicina cardiovascular. Obtén información sobre diagnósticos, protocolos de tratamiento y guías clínicas basadas en evidencia.
+              Soporte avanzado de IA para medicina cardiovascular. Chat inteligente y formularios profesionales para solicitudes de dispositivos.
             </p>
           </div>
 
-          <div className="flex justify-center space-y-4">
+          {/* Main Tools */}
+          <div className="flex flex-col md:flex-row justify-center gap-6 mb-8">
+            {/* Chat IA */}
             <Link href="/chat">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl shadow-blue-600/25 hover:shadow-blue-600/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex items-center justify-center space-x-3 mx-auto"
+                className="w-full md:w-80 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl shadow-blue-600/25 hover:shadow-blue-600/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex flex-col items-center justify-center space-y-2"
               >
-                <Heart className="w-5 h-5" />
-                <span>Iniciar Consulta Médica</span>
+                <Message className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="font-bold">Chat IA Médico</div>
+                  <div className="text-sm text-blue-100">Consulta inteligente cardiovascular</div>
+                </div>
               </Button>
             </Link>
+
+            {/* Formulario Médico */}
+            <Link href="/form">
+              <Button 
+                size="lg" 
+                className="w-full md:w-80 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-8 py-6 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl shadow-green-600/25 hover:shadow-green-600/40 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 flex flex-col items-center justify-center space-y-2"
+              >
+                <span className="text-3xl">📋</span>
+                <div className="text-center">
+                  <div className="font-bold">Formulario Médico</div>
+                  <div className="text-sm text-green-100">Solicitud de dispositivos IA</div>
+                </div>
+              </Button>
+            </Link>
+          </div>
+
+          {/* Features */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto text-sm">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+              <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">Chat Inteligente</div>
+              <div className="text-gray-600 dark:text-gray-400">Diagnósticos, protocolos y guías clínicas con IA</div>
+            </div>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+              <div className="text-green-600 dark:text-green-400 font-semibold mb-1">Reportes Profesionales</div>
+              <div className="text-gray-600 dark:text-gray-400">Formularios con justificación médica automática</div>
+            </div>
           </div>
         </div>
       </main>

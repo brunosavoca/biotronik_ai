@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface FormData {
   nombre: string;
@@ -255,33 +256,53 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header con acciones */}
+        {/* Navigation */}
+        <div className="bg-white rounded-xl shadow-lg p-4 mb-6 no-print">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white text-lg font-bold">🏥</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-blue-700">✅ Reporte Médico Generado</h1>
+                <p className="text-sm text-gray-600">Paciente: {formData.nombre} {formData.apellido}</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Link href="/">
+                <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                  🏠 Inicio
+                </button>
+              </Link>
+              <Link href="/chat">
+                <button className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                  💬 Chat IA
+                </button>
+              </Link>
+              <Link href="/form">
+                <button className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                  📋 Nuevo Formulario
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 no-print">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-blue-700">✅ Reporte Médico Generado</h1>
-              <p className="text-gray-600">Paciente: {formData.nombre} {formData.apellido}</p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={printReport}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-              >
-                🖨️ Imprimir
-              </button>
-              <button
-                onClick={downloadPDF}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
-              >
-                📄 Descargar HTML
-              </button>
-              <button
-                onClick={() => window.location.href = "/form"}
-                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                🔄 Nuevo Reporte
-              </button>
-            </div>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+            <button
+              onClick={printReport}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium"
+            >
+              🖨️ Imprimir PDF
+            </button>
+            <button
+              onClick={downloadPDF}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+            >
+              📄 Descargar HTML
+            </button>
           </div>
         </div>
 

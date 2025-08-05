@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import ReporteGenerado from "./ReporteGenerado";
 
 export default function FormPage() {
@@ -84,8 +85,36 @@ export default function FormPage() {
   if (submitted) return <ReporteGenerado formData={form} />;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 font-sans py-8">
-      <form onSubmit={handleSubmit} className="w-full max-w-4xl space-y-6">
+    <div className="min-h-screen bg-background px-4 font-sans py-8">
+      {/* Header with navigation */}
+      <div className="max-w-4xl mx-auto mb-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-white text-lg font-bold">🏥</span>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-blue-700">Formulario Médico</h1>
+              <p className="text-sm text-gray-600">Sistema de solicitud de dispositivos cardiovasculares</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <Link href="/">
+              <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                🏠 Inicio
+              </button>
+            </Link>
+            <Link href="/chat">
+              <button className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                💬 Chat IA
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <form onSubmit={handleSubmit} className="w-full max-w-4xl space-y-6">
         {/* Stepper */}
         <div className="flex justify-center mb-8">
           <div className="flex gap-4">
@@ -427,6 +456,7 @@ export default function FormPage() {
           </div>
         )}
       </form>
+      </div>
     </div>
   );
 }
