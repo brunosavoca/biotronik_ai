@@ -2,16 +2,11 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+export function Card({ className = "", children }: { className?: string; children: React.ReactNode }) {
   return (
-    <div
-      data-slot="card"
-      className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
-        className
-      )}
-      {...props}
-    />
+    <div className={`bg-white dark:bg-gray-900 shadow rounded-xl border border-gray-200 dark:border-gray-700 ${className}`}>
+      {children}
+    </div>
   )
 }
 
@@ -82,7 +77,6 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export {
-  Card,
   CardHeader,
   CardFooter,
   CardTitle,

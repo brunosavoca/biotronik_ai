@@ -43,6 +43,8 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   const [reporte, setReporte] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [sending, setSending] = useState(false)
+  const [sendMessage, setSendMessage] = useState<string>("")
 
   const generateReport = React.useCallback(async () => {
     try {
@@ -218,6 +220,40 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
     window.print();
   };
 
+  const sendReportByEmail = async () => {
+    setSendMessage("")
+    setSending(true)
+    try {
+      const subject = `Reporte Médico - ${formData.apellido}, ${formData.nombre} (${new Date().toLocaleDateString('es-AR')})`
+      const htmlContent = `
+        <div style="font-family: Georgia, serif; font-size: 16px; line-height: 1.7; color: #111">
+          <div style="border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 16px">
+            <h2 style="margin:0;color:#2563eb">INFORME MÉDICO CARDIOVASCULAR</h2>
+            <p style="margin:4px 0;color:#555">Paciente: <strong>${formData.nombre} ${formData.apellido}</strong> | Edad: ${formData.edad} | HC: ${formData.historiaClinica}</p>
+            <p style="margin:0;color:#777">Solicitud: ${formData.tipoSolicitud.replace(/-/g, ' ').toUpperCase()}</p>
+          </div>
+          ${reporte}
+          <hr />
+          <p style="font-size:12px;color:#666">Documento generado por Sistema Biotronik - ${new Date().toLocaleString('es-AR')}</p>
+        </div>`
+      const res = await fetch('/api/reporte/enviar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject, html: htmlContent })
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'No se pudo enviar el reporte')
+      }
+      setSendMessage('Reporte enviado correctamente a la lista pre-cargada ✅')
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'desconocido'
+      setSendMessage(`Error al enviar: ${msg}`)
+    } finally {
+      setSending(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -303,7 +339,19 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
             >
               📄 Descargar HTML
             </button>
+            <button
+              onClick={sendReportByEmail}
+              disabled={sending}
+              className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 font-medium ${sending ? 'bg-gray-400 text-white' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
+            >
+              {sending ? 'Enviando…' : '✉️ Enviar a lista pre-cargada'}
+            </button>
           </div>
+          {sendMessage && (
+            <div className={`mt-4 text-sm ${sendMessage.startsWith('Error') ? 'text-red-600' : 'text-green-700'}`}>
+              {sendMessage}
+            </div>
+          )}
         </div>
 
         {/* Datos del paciente */}

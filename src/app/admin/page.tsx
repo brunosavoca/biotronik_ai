@@ -17,6 +17,7 @@ import {
   Shield,
   Message
 } from "@mynaui/icons-react"
+import { Card } from "@/components/ui/card"
 
 interface User {
   id: string
@@ -38,6 +39,18 @@ export default function AdminPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
+  const [recipients, setRecipients] = useState<{id:string,email:string,name?:string,enabled:boolean}[]>([])
+  const [newRecipient, setNewRecipient] = useState<{email:string,name:string}>({ email: "", name: "" })
+
+  const loadRecipients = async () => {
+    try {
+      const res = await fetch('/api/admin/email-recipients')
+      const data = await res.json()
+      setRecipients(data.recipients || [])
+    } catch (e) {
+      console.error('Error cargando destinatarios', e)
+    }
+  }
 
 
   useEffect(() => {
@@ -49,6 +62,7 @@ export default function AdminPage() {
     }
 
     loadUsers()
+    loadRecipients()
   }, [session, status, router])
 
   const loadUsers = async () => {
@@ -243,6 +257,47 @@ export default function AdminPage() {
               📋 Formulario Médico
             </Button>
           </Link>
+        </div>
+
+        {/* Email recipients management */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <Card className="p-4">
+            <h3 className="text-lg font-semibold mb-3">Lista de correos pre-cargados</h3>
+            <div className="space-y-3">
+              {recipients.map(r => (
+                <div key={r.id} className="flex items-center justify-between border rounded-md p-2">
+                  <div>
+                    <div className="font-medium">{r.email}</div>
+                    {r.name && <div className="text-sm text-gray-500">{r.name}</div>}
+                    <div className={`text-xs ${r.enabled ? 'text-green-600' : 'text-gray-500'}`}>{r.enabled ? 'Habilitado' : 'Deshabilitado'}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={async ()=>{
+                      await fetch(`/api/admin/email-recipients/${r.id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled: !r.enabled }) })
+                      loadRecipients()
+                    }}>{r.enabled ? 'Deshabilitar' : 'Habilitar'}</Button>
+                    <Button variant="outline" size="sm" className="text-red-600" onClick={async ()=>{
+                      await fetch(`/api/admin/email-recipients/${r.id}`, { method:'DELETE' })
+                      loadRecipients()
+                    }}><Trash className="w-4 h-4 mr-1"/>Eliminar</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+          <Card className="p-4">
+            <h3 className="text-lg font-semibold mb-3">Agregar destinatario</h3>
+            <div className="space-y-2">
+              <Input placeholder="Email" value={newRecipient.email} onChange={e=>setNewRecipient(s=>({...s,email:e.target.value}))} />
+              <Input placeholder="Nombre (opcional)" value={newRecipient.name} onChange={e=>setNewRecipient(s=>({...s,name:e.target.value}))} />
+              <Button onClick={async ()=>{
+                if (!newRecipient.email) return
+                const res = await fetch('/api/admin/email-recipients', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(newRecipient) })
+                if (res.ok) { setNewRecipient({email:'',name:''}); loadRecipients() }
+                else { const d = await res.json(); alert(d.error || 'Error') }
+              }} className="bg-blue-600 hover:bg-blue-700 text-white">Guardar</Button>
+            </div>
+          </Card>
         </div>
 
         {/* Users Table */}
