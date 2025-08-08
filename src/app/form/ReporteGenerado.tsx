@@ -45,6 +45,9 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   const [error, setError] = useState<string>("");
   const [sending, setSending] = useState(false)
   const [sendMessage, setSendMessage] = useState<string>("")
+  const [recipients, setRecipients] = useState<{id:string,email:string,name?:string}[]>([])
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [extraEmail, setExtraEmail] = useState<string>("")
 
   const generateReport = React.useCallback(async () => {
     try {
@@ -75,6 +78,30 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   useEffect(() => {
     generateReport();
   }, [generateReport]);
+
+  useEffect(() => {
+    // cargar destinatarios habilitados desde la DB (Neon via Prisma)
+    (async ()=>{
+      try {
+        const res = await fetch('/api/email-recipients')
+        if (res.ok) {
+          const data = await res.json()
+          setRecipients(data.recipients || [])
+        }
+      } catch (e) {
+        console.error('No se pudieron cargar destinatarios', e)
+      }
+    })()
+  }, [])
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   const downloadPDF = () => {
     // Crear el contenido HTML para el PDF
@@ -236,10 +263,24 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
           <hr />
           <p style="font-size:12px;color:#666">Documento generado por Sistema Biotronik - ${new Date().toLocaleString('es-AR')}</p>
         </div>`
+      // construir override recipients: seleccionados + extraEmail válido
+      let override: string[] | undefined
+      const selected = recipients.filter(r => selectedIds.has(r.id)).map(r => r.email)
+      const extra = extraEmail.trim()
+      const looksEmail = extra.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(extra)
+      if (!looksEmail) {
+        throw new Error('El email adicional no es válido')
+      }
+      override = [...selected]
+      if (extra.length > 0) override.push(extra)
+      if (override.length === 0) {
+        // si no hay override, la API usará la lista pre-cargada habilitada
+        override = undefined
+      }
       const res = await fetch('/api/reporte/enviar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject, html: htmlContent })
+        body: JSON.stringify({ subject, html: htmlContent, overrideRecipients: override })
       })
       const data = await res.json()
       if (!res.ok || !data.success) {
@@ -326,6 +367,31 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
 
         {/* Actions */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 no-print">
+          {/* Selector de destinatarios */}
+          <div className="mb-4">
+            <h3 className="text-md font-semibold mb-2">Destinatarios frecuentes</h3>
+            {recipients.length === 0 ? (
+              <div className="text-sm text-gray-500">No hay destinatarios pre-cargados habilitados. Usa el campo de email adicional o configura la lista en Admin.</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {recipients.map(r => (
+                  <label key={r.id} className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" className="accent-blue-600" checked={selectedIds.has(r.id)} onChange={()=>toggleSelect(r.id)} />
+                    <span>{r.email}{r.name ? ` — ${r.name}` : ''}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+            <div className="mt-3">
+              <input
+                type="email"
+                value={extraEmail}
+                onChange={(e)=>setExtraEmail(e.target.value)}
+                placeholder="Agregar email adicional (opcional)"
+                className="w-full md:w-1/2 px-3 py-2 border rounded-md"
+              />
+            </div>
+          </div>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4">
             <button
               onClick={printReport}
@@ -344,7 +410,7 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
               disabled={sending}
               className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 font-medium ${sending ? 'bg-gray-400 text-white' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
             >
-              {sending ? 'Enviando…' : '✉️ Enviar a lista pre-cargada'}
+              {sending ? 'Enviando…' : '✉️ Enviar'}
             </button>
           </div>
           {sendMessage && (
