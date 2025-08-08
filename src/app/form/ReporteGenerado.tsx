@@ -43,6 +43,7 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   const [reporte, setReporte] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [progress, setProgress] = useState({ step: "", percentage: 0 });
 
   const generateReport = React.useCallback(async () => {
     try {
@@ -55,17 +56,50 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
 
-      if (data.success) {
-        setReporte(data.reporte);
-      } else {
-        setError(data.error || "Error al generar el reporte");
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error('No se pudo leer la respuesta');
+      }
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value);
+        const lines = text.split('\n').filter(line => line.trim());
+
+        for (const line of lines) {
+          try {
+            const data = JSON.parse(line);
+            
+            if (data.type === 'progress') {
+              setProgress({ step: data.step, percentage: data.percentage });
+            } else if (data.type === 'complete') {
+              if (data.success) {
+                setReporte(data.reporte);
+                setLoading(false);
+              } else {
+                setError(data.error || "Error al generar el reporte");
+                setLoading(false);
+              }
+            } else if (data.type === 'error') {
+              setError(data.error || "Error al generar el reporte");
+              setLoading(false);
+            }
+          } catch (e) {
+            console.error('Error parsing JSON:', e);
+          }
+        }
       }
     } catch (err) {
       setError("Error de conexión al generar el reporte");
       console.error("Error:", err);
-    } finally {
       setLoading(false);
     }
   }, [formData]);
@@ -74,146 +108,6 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
     generateReport();
   }, [generateReport]);
 
-  const downloadPDF = () => {
-    // Crear el contenido HTML para el PDF
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Reporte Médico - ${formData.nombre} ${formData.apellido}</title>
-        <style>
-          body {
-            font-family: 'Times New Roman', serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 20mm;
-            background: white;
-          }
-          
-          .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #2563eb;
-            padding-bottom: 20px;
-          }
-          
-          .header h1 {
-            color: #2563eb;
-            font-size: 24px;
-            margin: 0;
-          }
-          
-          .header h2 {
-            color: #666;
-            font-size: 16px;
-            margin: 5px 0;
-          }
-          
-          .patient-info {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border-left: 4px solid #2563eb;
-          }
-          
-          .patient-info h3 {
-            color: #2563eb;
-            margin-top: 0;
-          }
-          
-          .content {
-            font-size: 14px;
-            line-height: 1.8;
-          }
-          
-          .content h3 {
-            color: #1e40af;
-            font-weight: bold;
-            font-size: 16px;
-            margin: 20px 0 10px 0;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-          }
-          
-          .content p {
-            margin: 10px 0;
-            text-align: justify;
-          }
-          
-          .content strong {
-            font-weight: bold;
-            color: #374151;
-          }
-          
-          .content ul {
-            margin: 10px 0;
-            padding-left: 20px;
-          }
-          
-          .content li {
-            margin: 5px 0;
-          }
-          
-          .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            color: #666;
-            font-size: 12px;
-          }
-          
-          @media print {
-            body { margin: 0; padding: 15mm; }
-            .no-print { display: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>INFORME MÉDICO CARDIOVASCULAR</h1>
-          <h2>Solicitud de Dispositivo Médico</h2>
-          <p>Fecha: ${new Date().toLocaleDateString('es-AR')}</p>
-        </div>
-        
-        <div class="patient-info">
-          <h3>DATOS DEL PACIENTE</h3>
-          <p><strong>Nombre:</strong> ${formData.nombre} ${formData.apellido}</p>
-          <p><strong>Edad:</strong> ${formData.edad} años</p>
-          <p><strong>Historia Clínica:</strong> ${formData.historiaClinica}</p>
-          <p><strong>Solicitud:</strong> ${formData.tipoSolicitud.replace(/-/g, ' ').toUpperCase()}</p>
-        </div>
-        
-        <div class="content">
-          ${reporte}
-        </div>
-        
-        <div class="footer">
-          <p>Documento generado por Sistema Biotronik - ${new Date().toLocaleString('es-AR')}</p>
-          <p>Este informe ha sido generado con asistencia de inteligencia artificial y debe ser revisado por un profesional médico.</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Crear un Blob con el contenido HTML
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    // Crear un enlace temporal para descargar
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Reporte_Medico_${formData.apellido}_${formData.nombre}_${new Date().toISOString().split('T')[0]}.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   const printReport = () => {
     window.print();
   };
@@ -221,12 +115,91 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-blue-700 mb-2">Generando Reporte Médico</h2>
-          <p className="text-gray-600">Procesando información con inteligencia artificial...</p>
-          <div className="mt-4 text-sm text-gray-500">
-            Esto puede tomar unos momentos mientras nuestro sistema analiza los datos clínicos.
+        <div className="max-w-2xl w-full mx-auto p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <h2 className="text-3xl font-bold text-blue-700 mb-2">Generando Reporte Médico</h2>
+              <p className="text-gray-600 text-lg">Procesando información con inteligencia artificial</p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-6">
+              <div className="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Progreso</span>
+                <span>{progress.percentage}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Current Step */}
+            <div className="bg-blue-50 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-blue-800 font-medium">{progress.step || 'Iniciando proceso...'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Process Steps */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Etapas del proceso:</h3>
+              {[
+                { step: 'Análisis de datos del paciente', threshold: 10 },
+                { step: 'Procesamiento de síntomas y antecedentes', threshold: 20 },
+                { step: 'Evaluación de estudios complementarios', threshold: 30 },
+                { step: 'Consulta de guías médicas internacionales', threshold: 40 },
+                { step: 'Clasificación según criterios clínicos', threshold: 50 },
+                { step: 'Generación del informe con IA', threshold: 60 },
+                { step: 'Redacción y referencias bibliográficas', threshold: 80 },
+                { step: 'Finalización y formato profesional', threshold: 95 }
+              ].map((item, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    progress.percentage >= item.threshold 
+                      ? 'bg-green-500' 
+                      : progress.percentage > item.threshold - 10 
+                      ? 'bg-blue-500' 
+                      : 'bg-gray-300'
+                  }`}>
+                    {progress.percentage >= item.threshold ? (
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : progress.percentage > item.threshold - 10 ? (
+                      <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    ) : null}
+                  </div>
+                  <span className={`text-sm ${
+                    progress.percentage >= item.threshold 
+                      ? 'text-green-700 font-medium' 
+                      : progress.percentage > item.threshold - 10 
+                      ? 'text-blue-700 font-medium' 
+                      : 'text-gray-500'
+                  }`}>
+                    {item.step}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                Este proceso utiliza tecnología avanzada de IA para generar un informe médico completo y profesional.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -279,11 +252,11 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
                   💬 Chat IA
                 </button>
               </Link>
-              <Link href="/form">
-                <button className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors flex items-center gap-2">
-                  📋 Nuevo Formulario
-                </button>
-              </Link>
+              <button 
+                onClick={() => window.location.href = '/form'}
+                className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors flex items-center gap-2">
+                📋 Nuevo Formulario
+              </button>
             </div>
           </div>
         </div>
@@ -295,13 +268,7 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
               onClick={printReport}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium"
             >
-              🖨️ Imprimir PDF
-            </button>
-            <button
-              onClick={downloadPDF}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
-            >
-              📄 Descargar HTML
+              🖨️ Imprimir / Guardar PDF
             </button>
           </div>
         </div>
@@ -367,6 +334,42 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
               .medical-report em {
                 font-style: italic;
                 color: #6b7280;
+              }
+              
+              @media print {
+                .no-print {
+                  display: none !important;
+                }
+                
+                body {
+                  margin: 0;
+                  padding: 0;
+                }
+                
+                .medical-report {
+                  font-family: 'Times New Roman', serif !important;
+                }
+                
+                .medical-report h3 {
+                  page-break-after: avoid;
+                  color: #000 !important;
+                  border-bottom-color: #666 !important;
+                }
+                
+                .medical-report p,
+                .medical-report li {
+                  color: #000 !important;
+                  orphans: 3;
+                  widows: 3;
+                }
+                
+                .medical-report strong {
+                  color: #000 !important;
+                }
+                
+                .medical-report em {
+                  color: #333 !important;
+                }
               }
             `}</style>
           </div>

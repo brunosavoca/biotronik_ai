@@ -9,8 +9,35 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
 
-    // Construir el prompt para OpenAI
-    const prompt = `
+    // Create a readable stream
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+        
+        // Send progress updates
+        const sendProgress = (step: string, percentage: number) => {
+          const data = JSON.stringify({ type: 'progress', step, percentage }) + '\n';
+          controller.enqueue(encoder.encode(data));
+        };
+
+        try {
+          sendProgress('Analizando datos del paciente...', 10);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          sendProgress('Procesando síntomas y antecedentes clínicos...', 20);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          sendProgress('Evaluando estudios complementarios (ECG, Holter, Ecocardiograma)...', 30);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          sendProgress('Consultando guías médicas internacionales (ESC, AHA, SAC)...', 40);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          sendProgress('Determinando clasificación de indicación según criterios clínicos...', 50);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // Construir el prompt para OpenAI
+          const prompt = `
 Como especialista en cardiología, genera un informe médico profesional para solicitud de dispositivo cardiovascular basado en los siguientes datos del paciente:
 
 DATOS DEL PACIENTE:
@@ -63,42 +90,89 @@ IMPORTANTE:
 - Estructura el contenido de forma clara y profesional
 `;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "Eres un cardiólogo especialista en Argentina con amplia experiencia en solicitudes de dispositivos cardiovasculares para obras sociales. Redacta informes médicos profesionales siguiendo las guías internacionales ESC, AHA y SAC."
-        },
-        {
-          role: "user",
-          content: prompt
+          sendProgress('Generando informe médico con inteligencia artificial...', 60);
+
+          const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [
+              {
+                role: "system",
+                content: "Eres un cardiólogo especialista en Argentina con amplia experiencia en solicitudes de dispositivos cardiovasculares para obras sociales. Redacta informes médicos profesionales siguiendo las guías internacionales ESC, AHA y SAC."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            stream: true, // Enable streaming
+          });
+
+          sendProgress('Redactando historia clínica y justificación médica...', 70);
+
+          let reporte = '';
+          let charCount = 0;
+          
+          for await (const chunk of completion) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            reporte += content;
+            charCount += content.length;
+            
+            // Update progress based on content generation
+            if (charCount > 500 && charCount < 1000) {
+              sendProgress('Elaborando justificación con referencias bibliográficas...', 80);
+            } else if (charCount > 1500 && charCount < 2000) {
+              sendProgress('Determinando clasificación según guías internacionales...', 90);
+            }
+          }
+
+          sendProgress('Finalizando y formateando el informe...', 95);
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // Send the final report
+          const finalData = JSON.stringify({
+            type: 'complete',
+            success: true,
+            reporte,
+            paciente: {
+              nombre: formData.nombre,
+              apellido: formData.apellido,
+              edad: formData.edad,
+              historiaClinica: formData.historiaClinica
+            },
+            tipoSolicitud: formData.tipoSolicitud
+          }) + '\n';
+          
+          controller.enqueue(encoder.encode(finalData));
+          sendProgress('¡Informe médico generado exitosamente!', 100);
+          
+        } catch (error) {
+          console.error("Error generando reporte:", error);
+          const errorData = JSON.stringify({
+            type: 'error',
+            success: false,
+            error: "Error al generar el reporte médico. Verifique que todos los campos estén completos."
+          }) + '\n';
+          controller.enqueue(encoder.encode(errorData));
+        } finally {
+          controller.close();
         }
-      ],
-      // temperature: 0.3,
-      // max_tokens: 2000
+      }
     });
 
-    const reporte = completion.choices[0].message.content;
-
-    return NextResponse.json({
-      success: true,
-      reporte,
-      paciente: {
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        edad: formData.edad,
-        historiaClinica: formData.historiaClinica
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
       },
-      tipoSolicitud: formData.tipoSolicitud
     });
 
   } catch (error) {
-    console.error("Error generando reporte:", error);
+    console.error("Error in request:", error);
     return NextResponse.json(
       { 
         success: false, 
-        error: "Error al generar el reporte médico. Verifique que todos los campos estén completos." 
+        error: "Error al procesar la solicitud." 
       },
       { status: 500 }
     );
