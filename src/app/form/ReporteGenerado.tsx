@@ -43,6 +43,11 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   const [reporte, setReporte] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [sending, setSending] = useState(false)
+  const [sendMessage, setSendMessage] = useState<string>("")
+  const [recipients, setRecipients] = useState<{id:string,email:string,name?:string}[]>([])
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [extraEmail, setExtraEmail] = useState<string>("")
 
   const generateReport = React.useCallback(async () => {
     try {
@@ -74,149 +79,81 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
     generateReport();
   }, [generateReport]);
 
-  const downloadPDF = () => {
-    // Crear el contenido HTML para el PDF
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Reporte Médico - ${formData.nombre} ${formData.apellido}</title>
-        <style>
-          body {
-            font-family: 'Times New Roman', serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 20mm;
-            background: white;
-          }
-          
-          .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #2563eb;
-            padding-bottom: 20px;
-          }
-          
-          .header h1 {
-            color: #2563eb;
-            font-size: 24px;
-            margin: 0;
-          }
-          
-          .header h2 {
-            color: #666;
-            font-size: 16px;
-            margin: 5px 0;
-          }
-          
-          .patient-info {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border-left: 4px solid #2563eb;
-          }
-          
-          .patient-info h3 {
-            color: #2563eb;
-            margin-top: 0;
-          }
-          
-          .content {
-            font-size: 14px;
-            line-height: 1.8;
-          }
-          
-          .content h3 {
-            color: #1e40af;
-            font-weight: bold;
-            font-size: 16px;
-            margin: 20px 0 10px 0;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 5px;
-          }
-          
-          .content p {
-            margin: 10px 0;
-            text-align: justify;
-          }
-          
-          .content strong {
-            font-weight: bold;
-            color: #374151;
-          }
-          
-          .content ul {
-            margin: 10px 0;
-            padding-left: 20px;
-          }
-          
-          .content li {
-            margin: 5px 0;
-          }
-          
-          .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            text-align: center;
-            color: #666;
-            font-size: 12px;
-          }
-          
-          @media print {
-            body { margin: 0; padding: 15mm; }
-            .no-print { display: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>INFORME MÉDICO CARDIOVASCULAR</h1>
-          <h2>Solicitud de Dispositivo Médico</h2>
-          <p>Fecha: ${new Date().toLocaleDateString('es-AR')}</p>
-        </div>
-        
-        <div class="patient-info">
-          <h3>DATOS DEL PACIENTE</h3>
-          <p><strong>Nombre:</strong> ${formData.nombre} ${formData.apellido}</p>
-          <p><strong>Edad:</strong> ${formData.edad} años</p>
-          <p><strong>Historia Clínica:</strong> ${formData.historiaClinica}</p>
-          <p><strong>Solicitud:</strong> ${formData.tipoSolicitud.replace(/-/g, ' ').toUpperCase()}</p>
-        </div>
-        
-        <div class="content">
-          ${reporte}
-        </div>
-        
-        <div class="footer">
-          <p>Documento generado por Sistema Biotronik - ${new Date().toLocaleString('es-AR')}</p>
-          <p>Este informe ha sido generado con asistencia de inteligencia artificial y debe ser revisado por un profesional médico.</p>
-        </div>
-      </body>
-      </html>
-    `;
+  useEffect(() => {
+    // cargar destinatarios habilitados desde la DB (Neon via Prisma)
+    (async ()=>{
+      try {
+        const res = await fetch('/api/email-recipients')
+        if (res.ok) {
+          const data = await res.json()
+          setRecipients(data.recipients || [])
+        }
+      } catch (e) {
+        console.error('No se pudieron cargar destinatarios', e)
+      }
+    })()
+  }, [])
 
-    // Crear un Blob con el contenido HTML
-    const blob = new Blob([htmlContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    
-    // Crear un enlace temporal para descargar
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Reporte_Medico_${formData.apellido}_${formData.nombre}_${new Date().toISOString().split('T')[0]}.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   const printReport = () => {
     window.print();
   };
+
+  const sendReportByEmail = async () => {
+    setSendMessage("")
+    setSending(true)
+    try {
+      const subject = `Reporte Médico - ${formData.apellido}, ${formData.nombre} (${new Date().toLocaleDateString('es-AR')})`
+      const htmlContent = `
+        <div style="font-family: Georgia, serif; font-size: 16px; line-height: 1.7; color: #111">
+          <div style="border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 16px">
+            <h2 style="margin:0;color:#2563eb">INFORME MÉDICO CARDIOVASCULAR</h2>
+            <p style="margin:4px 0;color:#555">Paciente: <strong>${formData.nombre} ${formData.apellido}</strong> | Edad: ${formData.edad} | HC: ${formData.historiaClinica}</p>
+            <p style="margin:0;color:#777">Solicitud: ${formData.tipoSolicitud.replace(/-/g, ' ').toUpperCase()}</p>
+          </div>
+          ${reporte}
+          <hr />
+          <p style="font-size:12px;color:#666">Documento generado por Sistema Biotronik - ${new Date().toLocaleString('es-AR')}</p>
+        </div>`
+      // construir override recipients: seleccionados + extraEmail válido
+      let override: string[] | undefined
+      const selected = recipients.filter(r => selectedIds.has(r.id)).map(r => r.email)
+      const extra = extraEmail.trim()
+      const looksEmail = extra.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(extra)
+      if (!looksEmail) {
+        throw new Error('El email adicional no es válido')
+      }
+      override = [...selected]
+      if (extra.length > 0) override.push(extra)
+      if (override.length === 0) {
+        // si no hay override, la API usará la lista pre-cargada habilitada
+        override = undefined
+      }
+      const res = await fetch('/api/reporte/enviar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject, html: htmlContent, overrideRecipients: override })
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'No se pudo enviar el reporte')
+      }
+      setSendMessage('Reporte enviado correctamente a la lista pre-cargada ✅')
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'desconocido'
+      setSendMessage(`Error al enviar: ${msg}`)
+    } finally {
+      setSending(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -290,6 +227,31 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
 
         {/* Actions */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6 no-print">
+          {/* Selector de destinatarios */}
+          <div className="mb-4">
+            <h3 className="text-md font-semibold mb-2">Destinatarios frecuentes</h3>
+            {recipients.length === 0 ? (
+              <div className="text-sm text-gray-500">No hay destinatarios pre-cargados habilitados. Usa el campo de email adicional o configura la lista en Admin.</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {recipients.map(r => (
+                  <label key={r.id} className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" className="accent-blue-600" checked={selectedIds.has(r.id)} onChange={()=>toggleSelect(r.id)} />
+                    <span>{r.email}{r.name ? ` — ${r.name}` : ''}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+            <div className="mt-3">
+              <input
+                type="email"
+                value={extraEmail}
+                onChange={(e)=>setExtraEmail(e.target.value)}
+                placeholder="Agregar email adicional (opcional)"
+                className="w-full md:w-1/2 px-3 py-2 border rounded-md"
+              />
+            </div>
+          </div>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4">
             <button
               onClick={printReport}
@@ -298,12 +260,18 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
               🖨️ Imprimir PDF
             </button>
             <button
-              onClick={downloadPDF}
-              className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+              onClick={sendReportByEmail}
+              disabled={sending}
+              className={`px-6 py-3 rounded-lg transition-colors flex items-center gap-2 font-medium ${sending ? 'bg-gray-400 text-white' : 'bg-purple-600 hover:bg-purple-700 text-white'}`}
             >
-              📄 Descargar HTML
+              {sending ? 'Enviando…' : '✉️ Enviar'}
             </button>
           </div>
+          {sendMessage && (
+            <div className={`mt-4 text-sm ${sendMessage.startsWith('Error') ? 'text-red-600' : 'text-green-700'}`}>
+              {sendMessage}
+            </div>
+          )}
         </div>
 
         {/* Datos del paciente */}

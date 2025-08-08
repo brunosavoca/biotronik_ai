@@ -113,3 +113,14 @@ model Message {
   
   @@map("messages")
 }
+
+// Nuevo modelo para lista de correos pre-cargados
+model EmailRecipient {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("email_recipients")
+}
