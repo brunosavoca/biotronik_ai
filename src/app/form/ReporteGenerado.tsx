@@ -43,6 +43,7 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   const [reporte, setReporte] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [progress, setProgress] = useState({ step: "", percentage: 0 });
 
   const generateReport = React.useCallback(async () => {
     try {
@@ -55,17 +56,50 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
 
-      if (data.success) {
-        setReporte(data.reporte);
-      } else {
-        setError(data.error || "Error al generar el reporte");
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error('No se pudo leer la respuesta');
+      }
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value);
+        const lines = text.split('\n').filter(line => line.trim());
+
+        for (const line of lines) {
+          try {
+            const data = JSON.parse(line);
+            
+            if (data.type === 'progress') {
+              setProgress({ step: data.step, percentage: data.percentage });
+            } else if (data.type === 'complete') {
+              if (data.success) {
+                setReporte(data.reporte);
+                setLoading(false);
+              } else {
+                setError(data.error || "Error al generar el reporte");
+                setLoading(false);
+              }
+            } else if (data.type === 'error') {
+              setError(data.error || "Error al generar el reporte");
+              setLoading(false);
+            }
+          } catch (e) {
+            console.error('Error parsing JSON:', e);
+          }
+        }
       }
     } catch (err) {
       setError("Error de conexión al generar el reporte");
       console.error("Error:", err);
-    } finally {
       setLoading(false);
     }
   }, [formData]);
@@ -221,12 +255,91 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-blue-700 mb-2">Generando Reporte Médico</h2>
-          <p className="text-gray-600">Procesando información con inteligencia artificial...</p>
-          <div className="mt-4 text-sm text-gray-500">
-            Esto puede tomar unos momentos mientras nuestro sistema analiza los datos clínicos.
+        <div className="max-w-2xl w-full mx-auto p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <h2 className="text-3xl font-bold text-blue-700 mb-2">Generando Reporte Médico</h2>
+              <p className="text-gray-600 text-lg">Procesando información con inteligencia artificial</p>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mb-6">
+              <div className="flex justify-between text-sm text-gray-600 mb-2">
+                <span>Progreso</span>
+                <span>{progress.percentage}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-500 ease-out"
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Current Step */}
+            <div className="bg-blue-50 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-blue-800 font-medium">{progress.step || 'Iniciando proceso...'}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Process Steps */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">Etapas del proceso:</h3>
+              {[
+                { step: 'Análisis de datos del paciente', threshold: 10 },
+                { step: 'Procesamiento de síntomas y antecedentes', threshold: 20 },
+                { step: 'Evaluación de estudios complementarios', threshold: 30 },
+                { step: 'Consulta de guías médicas internacionales', threshold: 40 },
+                { step: 'Clasificación según criterios clínicos', threshold: 50 },
+                { step: 'Generación del informe con IA', threshold: 60 },
+                { step: 'Redacción y referencias bibliográficas', threshold: 80 },
+                { step: 'Finalización y formato profesional', threshold: 95 }
+              ].map((item, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    progress.percentage >= item.threshold 
+                      ? 'bg-green-500' 
+                      : progress.percentage > item.threshold - 10 
+                      ? 'bg-blue-500' 
+                      : 'bg-gray-300'
+                  }`}>
+                    {progress.percentage >= item.threshold ? (
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : progress.percentage > item.threshold - 10 ? (
+                      <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    ) : null}
+                  </div>
+                  <span className={`text-sm ${
+                    progress.percentage >= item.threshold 
+                      ? 'text-green-700 font-medium' 
+                      : progress.percentage > item.threshold - 10 
+                      ? 'text-blue-700 font-medium' 
+                      : 'text-gray-500'
+                  }`}>
+                    {item.step}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                Este proceso utiliza tecnología avanzada de IA para generar un informe médico completo y profesional.
+              </p>
+            </div>
           </div>
         </div>
       </div>
