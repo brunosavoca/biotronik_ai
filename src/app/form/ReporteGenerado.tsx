@@ -269,21 +269,24 @@ export default function ReporteGenerado({ formData }: ReporteGeneradoProps) {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Link href="/">
-                <button className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2">
-                  🏠 Inicio
-                </button>
+              <Link 
+                href="/"
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                🏠 Inicio
               </Link>
-              <Link href="/chat">
-                <button className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-medium transition-colors flex items-center gap-2">
-                  💬 Chat IA
-                </button>
+              <Link 
+                href="/chat"
+                className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                💬 Chat IA
               </Link>
-              <Link href="/form">
-                <button className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors flex items-center gap-2">
-                  📋 Nuevo Formulario
-                </button>
-              </Link>
+              <button 
+                onClick={() => window.location.href = '/form'}
+                className="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+              >
+                📋 Nuevo Formulario
+              </button>
             </div>
           </div>
         </div>
