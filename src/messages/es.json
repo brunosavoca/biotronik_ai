@@ -1,0 +1,231 @@
+{
+  "common": {
+    "appName": "Biotronik",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "actions": "Acciones",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Inicio",
+    "chat": "Chat",
+    "form": "Formulario",
+    "admin": "Admin",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "profile": "Perfil"
+  },
+  "home": {
+    "hero": {
+      "title": "Asistente IA para Cardiólogos",
+      "description": "Soporte avanzado de IA para medicina cardiovascular. Chat inteligente y formularios profesionales para solicitudes de dispositivos.",
+      "medicalChat": "Chat IA Médico",
+      "medicalChatDesc": "Consulta inteligente con IA especializada en medicina cardiovascular",
+      "medicalForm": "Formulario Médico",
+      "medicalFormDesc": "Solicitudes de dispositivos con justificación médica automática",
+      "startConsultation": "Iniciar consulta",
+      "createForm": "Crear formulario"
+    },
+    "features": {
+      "intelligentChat": "Chat Inteligente",
+      "intelligentChatDesc": "Diagnósticos, protocolos y guías clínicas con IA",
+      "professionalReports": "Reportes Profesionales",
+      "professionalReportsDesc": "Formularios con justificación médica automática"
+    },
+    "footer": {
+      "disclaimer": "Para uso profesional de cardiólogos licenciados. No para diagnóstico de pacientes."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Accede a tu cuenta",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "signInButton": "Iniciar Sesión",
+      "signingIn": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate",
+      "invalidCredentials": "Credenciales inválidas",
+      "errorSigningIn": "Error al iniciar sesión"
+    },
+    "signUp": {
+      "title": "Registrarse",
+      "subtitle": "Crea tu cuenta",
+      "name": "Nombre Completo",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Crea una contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu contraseña",
+      "signUpButton": "Registrarse",
+      "signingUp": "Creando cuenta...",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "errorSigningUp": "Error al crear la cuenta",
+      "userExists": "El usuario ya existe"
+    }
+  },
+  "chat": {
+    "title": "Asistente IA Médico",
+    "subtitle": "Haz preguntas sobre medicina cardiovascular",
+    "inputPlaceholder": "Haz tu pregunta médica...",
+    "send": "Enviar",
+    "thinking": "Pensando...",
+    "newChat": "Nuevo Chat",
+    "clearHistory": "Limpiar Historial",
+    "welcomeMessage": "¡Hola! Soy tu asistente IA especializado en medicina cardiovascular. ¿Cómo puedo ayudarte hoy?",
+    "errorMessage": "Lo siento, hubo un error al procesar tu solicitud.",
+    "emptyState": "Inicia una conversación haciendo una pregunta"
+  },
+  "form": {
+    "title": "Solicitud de Dispositivo Médico",
+    "subtitle": "Complete el formulario para solicitud de dispositivo con justificación médica",
+    "patient": {
+      "title": "Información del Paciente",
+      "name": "Nombre del Paciente",
+      "namePlaceholder": "Ingrese el nombre del paciente",
+      "age": "Edad",
+      "agePlaceholder": "Ingrese la edad",
+      "gender": "Género",
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro",
+      "medicalRecord": "Número de Historia Clínica",
+      "medicalRecordPlaceholder": "Ingrese el número de historia clínica"
+    },
+    "device": {
+      "title": "Información del Dispositivo",
+      "type": "Tipo de Dispositivo",
+      "typePlaceholder": "Seleccione el tipo de dispositivo",
+      "pacemaker": "Marcapasos",
+      "defibrillator": "Desfibrilador",
+      "monitor": "Monitor",
+      "other": "Otro",
+      "model": "Modelo",
+      "modelPlaceholder": "Ingrese el modelo del dispositivo",
+      "indication": "Indicación Médica",
+      "indicationPlaceholder": "Describa la indicación médica..."
+    },
+    "justification": {
+      "title": "Justificación Médica",
+      "diagnosis": "Diagnóstico Principal",
+      "diagnosisPlaceholder": "Ingrese el diagnóstico principal",
+      "symptoms": "Síntomas",
+      "symptomsPlaceholder": "Describa los síntomas del paciente...",
+      "previousTreatments": "Tratamientos Previos",
+      "previousTreatmentsPlaceholder": "Liste los tratamientos previos...",
+      "generateJustification": "Generar Justificación IA",
+      "generatedText": "Justificación Generada"
+    },
+    "submit": "Enviar Solicitud",
+    "submitting": "Enviando...",
+    "successMessage": "Solicitud enviada exitosamente",
+    "errorMessage": "Error al enviar la solicitud"
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "dashboard": "Tablero",
+    "users": {
+      "title": "Usuarios",
+      "list": "Lista de Usuarios",
+      "add": "Agregar Usuario",
+      "edit": "Editar Usuario",
+      "delete": "Eliminar Usuario",
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "status": "Estado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "createdAt": "Creado el",
+      "lastLogin": "Último Acceso",
+      "actions": "Acciones"
+    },
+    "requests": {
+      "title": "Solicitudes de Dispositivos",
+      "pending": "Pendientes",
+      "approved": "Aprobadas",
+      "rejected": "Rechazadas",
+      "all": "Todas las Solicitudes",
+      "requestId": "ID de Solicitud",
+      "patientName": "Nombre del Paciente",
+      "deviceType": "Tipo de Dispositivo",
+      "requestDate": "Fecha de Solicitud",
+      "status": "Estado",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "viewDetails": "Ver Detalles"
+    },
+    "settings": {
+      "title": "Configuración",
+      "general": "Configuración General",
+      "security": "Seguridad",
+      "notifications": "Notificaciones",
+      "backup": "Respaldo",
+      "language": "Idioma",
+      "theme": "Tema",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Sistema"
+    },
+    "stats": {
+      "totalUsers": "Total de Usuarios",
+      "activeUsers": "Usuarios Activos",
+      "totalRequests": "Total de Solicitudes",
+      "pendingRequests": "Solicitudes Pendientes",
+      "approvedRequests": "Solicitudes Aprobadas",
+      "rejectedRequests": "Solicitudes Rechazadas"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Página No Encontrada",
+      "message": "La página que buscas no existe.",
+      "backHome": "Volver al inicio"
+    },
+    "500": {
+      "title": "Error del Servidor",
+      "message": "Algo salió mal de nuestro lado.",
+      "tryAgain": "Intentar de nuevo"
+    },
+    "unauthorized": {
+      "title": "No Autorizado",
+      "message": "No tienes permiso para acceder a este recurso.",
+      "signIn": "Iniciar sesión"
+    }
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "email": "Por favor ingrese un correo válido",
+    "minLength": "Debe tener al menos {min} caracteres",
+    "maxLength": "No debe tener más de {max} caracteres",
+    "passwordStrength": "La contraseña debe ser fuerte",
+    "numeric": "Debe ser un número",
+    "alphanumeric": "Debe contener solo letras y números"
+  }
+}
