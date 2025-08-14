@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import { useTranslations } from 'next-intl';
 import { 
   Menu, 
   X, 
@@ -43,6 +44,7 @@ interface Conversation {
 
 export default function ChatPage() {
   const { data: session } = useSession();
+  const t = useTranslations();
   
   // Estado principal
   const [conversations, setConversations] = useState<Conversation[]>([]);

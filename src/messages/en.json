@@ -1,0 +1,221 @@
+{
+  "common": {
+    "appName": "Biotronik",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "welcome": "Welcome"
+  },
+  "navigation": {
+    "home": "Home",
+    "chat": "Chat",
+    "form": "Form",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "AI Assistant for Cardiologists",
+    "subtitle": "Advanced AI support for cardiovascular medicine. Intelligent chat and professional forms for device requests.",
+    "chatCard": {
+      "title": "Medical AI Chat",
+      "description": "Intelligent consultation with AI specialized in cardiovascular medicine",
+      "action": "Start consultation"
+    },
+    "formCard": {
+      "title": "Medical Form",
+      "description": "Device requests with automatic medical justification",
+      "action": "Create form"
+    },
+    "features": {
+      "chat": {
+        "title": "Intelligent Chat",
+        "description": "Diagnostics, protocols and clinical guidelines with AI"
+      },
+      "reports": {
+        "title": "Professional Reports",
+        "description": "Forms with automatic medical justification"
+      }
+    },
+    "footer": "For professional use by licensed cardiologists. Not for patient diagnosis."
+  },
+  "auth": {
+    "signin": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "button": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up",
+      "invalidCredentials": "Invalid credentials",
+      "errorSigningIn": "Error signing in"
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Register for a new account",
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "button": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signinLink": "Sign in",
+      "passwordMismatch": "Passwords do not match",
+      "errorCreatingAccount": "Error creating account",
+      "accountCreated": "Account created successfully"
+    }
+  },
+  "chat": {
+    "title": "Medical AI Chat",
+    "subtitle": "Consult our AI specialized in cardiovascular medicine",
+    "placeholder": "Type your medical question...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "error": "Error sending message",
+    "newChat": "New Chat",
+    "clearHistory": "Clear History",
+    "examples": {
+      "title": "Example Questions",
+      "example1": "What are the indications for a pacemaker?",
+      "example2": "Explain the NYHA classification",
+      "example3": "Treatment protocol for atrial fibrillation"
+    }
+  },
+  "form": {
+    "title": "Medical Device Request Form",
+    "subtitle": "Complete the form to generate a medical justification",
+    "patient": {
+      "title": "Patient Information",
+      "name": "Patient Name",
+      "age": "Age",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "medicalRecord": "Medical Record Number"
+    },
+    "diagnosis": {
+      "title": "Diagnosis",
+      "primary": "Primary Diagnosis",
+      "secondary": "Secondary Diagnosis",
+      "icd10": "ICD-10 Code"
+    },
+    "device": {
+      "title": "Device Information",
+      "type": "Device Type",
+      "model": "Model",
+      "manufacturer": "Manufacturer",
+      "justification": "Medical Justification"
+    },
+    "doctor": {
+      "title": "Doctor Information",
+      "name": "Doctor Name",
+      "license": "Medical License",
+      "specialty": "Specialty",
+      "institution": "Institution"
+    },
+    "buttons": {
+      "generate": "Generate Report",
+      "clear": "Clear Form",
+      "download": "Download PDF",
+      "save": "Save Draft"
+    },
+    "messages": {
+      "generating": "Generating report...",
+      "generated": "Report generated successfully",
+      "error": "Error generating report",
+      "saved": "Draft saved successfully"
+    }
+  },
+  "admin": {
+    "title": "Administration Panel",
+    "subtitle": "Manage users and system settings",
+    "tabs": {
+      "users": "Users",
+      "settings": "Settings",
+      "reports": "Reports",
+      "activity": "Activity"
+    },
+    "users": {
+      "title": "User Management",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "createdAt": "Created",
+        "actions": "Actions"
+      },
+      "roles": {
+        "user": "User",
+        "admin": "Administrator",
+        "superadmin": "Super Administrator"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended"
+      },
+      "actions": {
+        "edit": "Edit User",
+        "delete": "Delete User",
+        "suspend": "Suspend User",
+        "activate": "Activate User"
+      },
+      "addUser": "Add New User",
+      "searchPlaceholder": "Search users..."
+    },
+    "settings": {
+      "title": "System Settings",
+      "general": "General Settings",
+      "security": "Security",
+      "notifications": "Notifications",
+      "integrations": "Integrations"
+    },
+    "reports": {
+      "title": "Reports",
+      "usage": "Usage Statistics",
+      "performance": "Performance",
+      "errors": "Error Logs"
+    }
+  },
+  "errors": {
+    "404": "Page not found",
+    "500": "Internal server error",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "networkError": "Network error. Please check your connection.",
+    "tryAgain": "Please try again later"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be no more than {max} characters",
+    "passwordStrength": "Password must contain uppercase, lowercase, number and special character",
+    "numeric": "Must be a number",
+    "alphanumeric": "Must contain only letters and numbers"
+  }
+}

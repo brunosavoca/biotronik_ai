@@ -1,38 +1,15 @@
+import { ReactNode } from 'react';
+import { locales } from '@/i18n';
 
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { AuthProvider } from "@/components/AuthProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Biotronik",
-  description: "Asistente de IA para cardiólogos con administración de usuarios",
+type Props = {
+  children: ReactNode;
+  params: { locale: string };
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </body>
-    </html>
-  );
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return children;
 }

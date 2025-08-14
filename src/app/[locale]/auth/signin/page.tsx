@@ -3,9 +3,11 @@
 import { useState } from "react"
 import { signIn, getSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
+import LocaleLink from "@/components/LocaleLink"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useTranslations } from 'next-intl'
+import { useCurrentLocale } from '@/hooks/useLocale'
 
 export default function SignInPage() {
   const [email, setEmail] = useState("")
@@ -14,8 +16,8 @@ export default function SignInPage() {
   const [error, setError] = useState("")
   
   const router = useRouter()
-  // const searchParams = useSearchParams()
-  // const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const t = useTranslations()
+  const locale = useCurrentLocale()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,18 +32,18 @@ export default function SignInPage() {
       })
 
       if (result?.error) {
-        setError("Credenciales inválidas")
+        setError(t('auth.signin.invalidCredentials'))
       } else {
         // Verificar el rol del usuario después del login exitoso
         const session = await getSession()
         if (session?.user?.role === "SUPERADMIN" || session?.user?.role === "ADMIN") {
-          router.push("/admin")
+          router.push(`/${locale}/admin`)
         } else {
-          router.push("/chat")
+          router.push(`/${locale}/chat`)
         }
       }
     } catch {
-      setError("Error al iniciar sesión")
+      setError(t('auth.signin.errorSigningIn'))
     } finally {
       setIsLoading(false)
     }
@@ -55,10 +57,10 @@ export default function SignInPage() {
             <span className="text-white text-2xl font-bold">B</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Biotronik
+            {t('common.appName')}
           </h2>
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Inicia sesión en tu cuenta
+            {t('auth.signin.subtitle')}
           </p>
         </div>
 
@@ -66,7 +68,7 @@ export default function SignInPage() {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email médico
+                {t('auth.signin.email')}
               </label>
               <Input
                 id="email"
@@ -82,7 +84,7 @@ export default function SignInPage() {
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Contraseña
+                {t('auth.signin.password')}
               </label>
               <Input
                 id="password"
@@ -108,22 +110,22 @@ export default function SignInPage() {
             disabled={isLoading}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           >
-            {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            {isLoading ? t('common.loading') : t('auth.signin.button')}
           </Button>
         </form>
 
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            ¿No tienes una cuenta?{" "}
-            <Link 
+            {t('auth.signin.noAccount')}{" "}
+            <LocaleLink 
               href="/auth/signup" 
               className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
             >
-              Regístrate aquí
-            </Link>
+              {t('auth.signin.signupLink')}
+            </LocaleLink>
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Solo para profesionales médicos autorizados
+            {t('home.footer')}
           </p>
         </div>
       </div>
