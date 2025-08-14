@@ -1,0 +1,231 @@
+{
+  "common": {
+    "appName": "Biotronik",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "chat": "Chat",
+    "form": "Form",
+    "admin": "Admin",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "profile": "Profile"
+  },
+  "home": {
+    "hero": {
+      "title": "AI Assistant for Cardiologists",
+      "description": "Advanced AI support for cardiovascular medicine. Intelligent chat and professional forms for device requests.",
+      "medicalChat": "Medical AI Chat",
+      "medicalChatDesc": "Intelligent consultation with AI specialized in cardiovascular medicine",
+      "medicalForm": "Medical Form",
+      "medicalFormDesc": "Device requests with automatic medical justification",
+      "startConsultation": "Start consultation",
+      "createForm": "Create form"
+    },
+    "features": {
+      "intelligentChat": "Intelligent Chat",
+      "intelligentChatDesc": "Diagnostics, protocols and clinical guidelines with AI",
+      "professionalReports": "Professional Reports",
+      "professionalReportsDesc": "Forms with automatic medical justification"
+    },
+    "footer": {
+      "disclaimer": "For professional use by licensed cardiologists. Not for patient diagnosis."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "signInButton": "Sign In",
+      "signingIn": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up",
+      "invalidCredentials": "Invalid credentials",
+      "errorSigningIn": "Error signing in"
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "subtitle": "Create your account",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Create a password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "signUpButton": "Sign Up",
+      "signingUp": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "passwordMismatch": "Passwords do not match",
+      "errorSigningUp": "Error creating account",
+      "userExists": "User already exists"
+    }
+  },
+  "chat": {
+    "title": "Medical AI Assistant",
+    "subtitle": "Ask questions about cardiovascular medicine",
+    "inputPlaceholder": "Ask your medical question...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "newChat": "New Chat",
+    "clearHistory": "Clear History",
+    "welcomeMessage": "Hello! I'm your AI assistant specialized in cardiovascular medicine. How can I help you today?",
+    "errorMessage": "Sorry, there was an error processing your request.",
+    "emptyState": "Start a conversation by asking a question"
+  },
+  "form": {
+    "title": "Medical Device Request",
+    "subtitle": "Complete the form for device request with medical justification",
+    "patient": {
+      "title": "Patient Information",
+      "name": "Patient Name",
+      "namePlaceholder": "Enter patient name",
+      "age": "Age",
+      "agePlaceholder": "Enter age",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "medicalRecord": "Medical Record Number",
+      "medicalRecordPlaceholder": "Enter medical record number"
+    },
+    "device": {
+      "title": "Device Information",
+      "type": "Device Type",
+      "typePlaceholder": "Select device type",
+      "pacemaker": "Pacemaker",
+      "defibrillator": "Defibrillator",
+      "monitor": "Monitor",
+      "other": "Other",
+      "model": "Model",
+      "modelPlaceholder": "Enter device model",
+      "indication": "Medical Indication",
+      "indicationPlaceholder": "Describe the medical indication..."
+    },
+    "justification": {
+      "title": "Medical Justification",
+      "diagnosis": "Primary Diagnosis",
+      "diagnosisPlaceholder": "Enter primary diagnosis",
+      "symptoms": "Symptoms",
+      "symptomsPlaceholder": "Describe patient symptoms...",
+      "previousTreatments": "Previous Treatments",
+      "previousTreatmentsPlaceholder": "List previous treatments...",
+      "generateJustification": "Generate AI Justification",
+      "generatedText": "Generated Justification"
+    },
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+    "successMessage": "Request submitted successfully",
+    "errorMessage": "Error submitting request"
+  },
+  "admin": {
+    "title": "Administration Panel",
+    "dashboard": "Dashboard",
+    "users": {
+      "title": "Users",
+      "list": "User List",
+      "add": "Add User",
+      "edit": "Edit User",
+      "delete": "Delete User",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "createdAt": "Created At",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    },
+    "requests": {
+      "title": "Device Requests",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "all": "All Requests",
+      "requestId": "Request ID",
+      "patientName": "Patient Name",
+      "deviceType": "Device Type",
+      "requestDate": "Request Date",
+      "status": "Status",
+      "approve": "Approve",
+      "reject": "Reject",
+      "viewDetails": "View Details"
+    },
+    "settings": {
+      "title": "Settings",
+      "general": "General Settings",
+      "security": "Security",
+      "notifications": "Notifications",
+      "backup": "Backup",
+      "language": "Language",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "totalRequests": "Total Requests",
+      "pendingRequests": "Pending Requests",
+      "approvedRequests": "Approved Requests",
+      "rejectedRequests": "Rejected Requests"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "backHome": "Go back home"
+    },
+    "500": {
+      "title": "Internal Server Error",
+      "message": "Something went wrong on our end.",
+      "tryAgain": "Try again"
+    },
+    "unauthorized": {
+      "title": "Unauthorized",
+      "message": "You don't have permission to access this resource.",
+      "signIn": "Sign in"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be no more than {max} characters",
+    "passwordStrength": "Password must be strong",
+    "numeric": "Must be a number",
+    "alphanumeric": "Must contain only letters and numbers"
+  }
+}
