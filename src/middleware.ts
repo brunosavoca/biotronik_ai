@@ -2,7 +2,6 @@ import { withAuth } from "next-auth/middleware"
 import type { NextRequest } from "next/server"
 import createIntlMiddleware from 'next-intl/middleware'
 import { locales, defaultLocale } from '@/i18n/config'
-import type { NextAuthRequest } from "next-auth/middleware"
 
 // Create the internationalization middleware
 const intlMiddleware = createIntlMiddleware({
@@ -50,7 +49,8 @@ export default function middleware(req: NextRequest) {
     }
   )
   
-  return authMiddleware(req as NextAuthRequest)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (authMiddleware as any)(req)
 }
 
 export const config = {
