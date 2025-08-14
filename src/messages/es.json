@@ -1,0 +1,221 @@
+{
+  "common": {
+    "appName": "Biotronik",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "submit": "Enviar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "refresh": "Actualizar",
+    "logout": "Cerrar Sesión",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "welcome": "Bienvenido"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "chat": "Chat",
+    "form": "Formulario",
+    "admin": "Admin",
+    "dashboard": "Panel",
+    "profile": "Perfil",
+    "settings": "Configuración"
+  },
+  "home": {
+    "title": "Asistente IA para Cardiólogos",
+    "subtitle": "Soporte avanzado de IA para medicina cardiovascular. Chat inteligente y formularios profesionales para solicitudes de dispositivos.",
+    "chatCard": {
+      "title": "Chat IA Médico",
+      "description": "Consulta inteligente con IA especializada en medicina cardiovascular",
+      "action": "Iniciar consulta"
+    },
+    "formCard": {
+      "title": "Formulario Médico",
+      "description": "Solicitudes de dispositivos con justificación médica automática",
+      "action": "Crear formulario"
+    },
+    "features": {
+      "chat": {
+        "title": "Chat Inteligente",
+        "description": "Diagnósticos, protocolos y guías clínicas con IA"
+      },
+      "reports": {
+        "title": "Reportes Profesionales",
+        "description": "Formularios con justificación médica automática"
+      }
+    },
+    "footer": "Para uso profesional de cardiólogos licenciados. No para diagnóstico de pacientes."
+  },
+  "auth": {
+    "signin": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Accede a tu cuenta",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "rememberMe": "Recordarme",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "button": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signupLink": "Regístrate",
+      "invalidCredentials": "Credenciales inválidas",
+      "errorSigningIn": "Error al iniciar sesión"
+    },
+    "signup": {
+      "title": "Crear Cuenta",
+      "subtitle": "Regístrate para una nueva cuenta",
+      "name": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "button": "Crear Cuenta",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signinLink": "Iniciar sesión",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "errorCreatingAccount": "Error al crear la cuenta",
+      "accountCreated": "Cuenta creada exitosamente"
+    }
+  },
+  "chat": {
+    "title": "Chat IA Médico",
+    "subtitle": "Consulta nuestra IA especializada en medicina cardiovascular",
+    "placeholder": "Escribe tu pregunta médica...",
+    "send": "Enviar",
+    "thinking": "Pensando...",
+    "error": "Error al enviar mensaje",
+    "newChat": "Nuevo Chat",
+    "clearHistory": "Limpiar Historial",
+    "examples": {
+      "title": "Preguntas de Ejemplo",
+      "example1": "¿Cuáles son las indicaciones para un marcapasos?",
+      "example2": "Explica la clasificación NYHA",
+      "example3": "Protocolo de tratamiento para fibrilación auricular"
+    }
+  },
+  "form": {
+    "title": "Formulario de Solicitud de Dispositivo Médico",
+    "subtitle": "Complete el formulario para generar una justificación médica",
+    "patient": {
+      "title": "Información del Paciente",
+      "name": "Nombre del Paciente",
+      "age": "Edad",
+      "gender": "Género",
+      "male": "Masculino",
+      "female": "Femenino",
+      "other": "Otro",
+      "medicalRecord": "Número de Historia Clínica"
+    },
+    "diagnosis": {
+      "title": "Diagnóstico",
+      "primary": "Diagnóstico Primario",
+      "secondary": "Diagnóstico Secundario",
+      "icd10": "Código CIE-10"
+    },
+    "device": {
+      "title": "Información del Dispositivo",
+      "type": "Tipo de Dispositivo",
+      "model": "Modelo",
+      "manufacturer": "Fabricante",
+      "justification": "Justificación Médica"
+    },
+    "doctor": {
+      "title": "Información del Médico",
+      "name": "Nombre del Médico",
+      "license": "Licencia Médica",
+      "specialty": "Especialidad",
+      "institution": "Institución"
+    },
+    "buttons": {
+      "generate": "Generar Reporte",
+      "clear": "Limpiar Formulario",
+      "download": "Descargar PDF",
+      "save": "Guardar Borrador"
+    },
+    "messages": {
+      "generating": "Generando reporte...",
+      "generated": "Reporte generado exitosamente",
+      "error": "Error al generar el reporte",
+      "saved": "Borrador guardado exitosamente"
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "subtitle": "Gestiona usuarios y configuración del sistema",
+    "tabs": {
+      "users": "Usuarios",
+      "settings": "Configuración",
+      "reports": "Reportes",
+      "activity": "Actividad"
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "table": {
+        "name": "Nombre",
+        "email": "Correo",
+        "role": "Rol",
+        "status": "Estado",
+        "createdAt": "Creado",
+        "actions": "Acciones"
+      },
+      "roles": {
+        "user": "Usuario",
+        "admin": "Administrador",
+        "superadmin": "Super Administrador"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "suspended": "Suspendido"
+      },
+      "actions": {
+        "edit": "Editar Usuario",
+        "delete": "Eliminar Usuario",
+        "suspend": "Suspender Usuario",
+        "activate": "Activar Usuario"
+      },
+      "addUser": "Agregar Nuevo Usuario",
+      "searchPlaceholder": "Buscar usuarios..."
+    },
+    "settings": {
+      "title": "Configuración del Sistema",
+      "general": "Configuración General",
+      "security": "Seguridad",
+      "notifications": "Notificaciones",
+      "integrations": "Integraciones"
+    },
+    "reports": {
+      "title": "Reportes",
+      "usage": "Estadísticas de Uso",
+      "performance": "Rendimiento",
+      "errors": "Registros de Errores"
+    }
+  },
+  "errors": {
+    "404": "Página no encontrada",
+    "500": "Error interno del servidor",
+    "unauthorized": "Acceso no autorizado",
+    "forbidden": "Acceso prohibido",
+    "networkError": "Error de red. Por favor verifica tu conexión.",
+    "tryAgain": "Por favor intenta más tarde"
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "email": "Por favor ingresa un correo válido",
+    "minLength": "Debe tener al menos {min} caracteres",
+    "maxLength": "No debe tener más de {max} caracteres",
+    "passwordStrength": "La contraseña debe contener mayúsculas, minúsculas, números y caracteres especiales",
+    "numeric": "Debe ser un número",
+    "alphanumeric": "Debe contener solo letras y números"
+  }
+}

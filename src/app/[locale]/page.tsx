@@ -1,12 +1,15 @@
 "use client"
 
-import Link from "next/link";
+import LocaleLink from "@/components/LocaleLink";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { Building, Heart, Cog } from "@mynaui/icons-react";
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcherCompact } from '@/components/LanguageSwitcher';
 
 export default function Home() {
   const { data: session } = useSession();
+  const t = useTranslations();
   
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col">
@@ -19,32 +22,33 @@ export default function Home() {
                 <Building className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-medium text-gray-900 dark:text-white">
-                Biotronik
+                {t('common.appName')}
               </span>
             </div>
             <div className="flex items-center space-x-4">
+              <LanguageSwitcherCompact />
               {session && (session.user.role === "ADMIN" || session.user.role === "SUPERADMIN") && (
-                <Link href="/admin">
+                <LocaleLink href="/admin">
                   <Button variant="outline" size="sm" className="flex items-center space-x-2">
                     <Cog className="w-4 h-4" />
-                    <span>Admin</span>
+                    <span>{t('navigation.admin')}</span>
                   </Button>
-                </Link>
+                </LocaleLink>
               )}
               {session && (
                 <>
-                  <Link href="/chat">
+                  <LocaleLink href="/chat">
                     <Button variant="outline" size="sm" className="flex items-center space-x-2">
                       <span className="text-sm">💬</span>
-                      <span>Chat</span>
+                      <span>{t('navigation.chat')}</span>
                     </Button>
-                  </Link>
-                  <Link href="/form">
+                  </LocaleLink>
+                  <LocaleLink href="/form">
                     <Button variant="outline" size="sm" className="flex items-center space-x-2">
                       <span className="text-sm">📋</span>
-                      <span>Formulario</span>
+                      <span>{t('navigation.form')}</span>
                     </Button>
-                  </Link>
+                  </LocaleLink>
                 </>
               )}
             </div>
@@ -64,19 +68,19 @@ export default function Home() {
             </div>
             
             <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 dark:text-white mb-4 tracking-tight">
-              <span className="text-blue-600 dark:text-blue-400">Biotronik</span>
+              <span className="text-blue-600 dark:text-blue-400">{t('common.appName')}</span>
               <br />
-              Asistente IA para Cardiólogos
+              {t('home.title')}
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-lg mx-auto">
-              Soporte avanzado de IA para medicina cardiovascular. Chat inteligente y formularios profesionales para solicitudes de dispositivos.
+              {t('home.subtitle')}
             </p>
           </div>
 
           {/* Main Tools */}
           <div className="flex flex-col md:flex-row justify-center gap-8 mb-12">
             {/* Chat IA */}
-            <Link href="/chat" className="group">
+            <LocaleLink href="/chat" className="group">
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/30 border border-blue-200 dark:border-blue-700 rounded-2xl p-8 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full md:w-80 h-48">
                 <div className="absolute top-6 right-6 w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,23 +89,23 @@ export default function Home() {
                 </div>
                 <div className="space-y-3 pr-16">
                   <h3 className="text-2xl font-bold text-blue-900 dark:text-blue-100 group-hover:text-blue-600 transition-colors">
-                    Chat IA Médico
+                    {t('home.chatCard.title')}
                   </h3>
                   <p className="text-blue-700 dark:text-blue-300 text-base leading-relaxed">
-                    Consulta inteligente con IA especializada en medicina cardiovascular
+                    {t('home.chatCard.description')}
                   </p>
                   <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm font-medium pt-2">
-                    <span>Iniciar consulta</span>
+                    <span>{t('home.chatCard.action')}</span>
                     <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
               </div>
-            </Link>
+            </LocaleLink>
 
             {/* Formulario Médico */}
-            <Link href="/form" className="group">
+            <LocaleLink href="/form" className="group">
               <div className="relative overflow-hidden bg-gradient-to-br from-teal-50 to-cyan-100 dark:from-teal-900/20 dark:to-cyan-800/30 border border-teal-200 dark:border-teal-700 rounded-2xl p-8 hover:shadow-lg hover:shadow-teal-500/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer w-full md:w-80 h-48">
                 <div className="absolute top-6 right-6 w-10 h-10 bg-teal-600 rounded-lg flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,31 +114,31 @@ export default function Home() {
                 </div>
                 <div className="space-y-3 pr-16">
                   <h3 className="text-2xl font-bold text-teal-900 dark:text-teal-100 group-hover:text-teal-600 transition-colors">
-                    Formulario Médico
+                    {t('home.formCard.title')}
                   </h3>
                   <p className="text-teal-700 dark:text-teal-300 text-base leading-relaxed">
-                    Solicitudes de dispositivos con justificación médica automática
+                    {t('home.formCard.description')}
                   </p>
                   <div className="flex items-center text-teal-600 dark:text-teal-400 text-sm font-medium pt-2">
-                    <span>Crear formulario</span>
+                    <span>{t('home.formCard.action')}</span>
                     <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
               </div>
-            </Link>
+            </LocaleLink>
           </div>
 
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto text-sm mt-12">
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-center">
-              <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">Chat Inteligente</div>
-              <div className="text-gray-600 dark:text-gray-400">Diagnósticos, protocolos y guías clínicas con IA</div>
+              <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">{t('home.features.chat.title')}</div>
+              <div className="text-gray-600 dark:text-gray-400">{t('home.features.chat.description')}</div>
             </div>
             <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-center">
-              <div className="text-teal-600 dark:text-teal-400 font-semibold mb-1">Reportes Profesionales</div>
-              <div className="text-gray-600 dark:text-gray-400">Formularios con justificación médica automática</div>
+              <div className="text-teal-600 dark:text-teal-400 font-semibold mb-1">{t('home.features.reports.title')}</div>
+              <div className="text-gray-600 dark:text-gray-400">{t('home.features.reports.description')}</div>
             </div>
           </div>
         </div>
@@ -144,7 +148,7 @@ export default function Home() {
       <footer className="border-t border-gray-100 dark:border-gray-800 py-6">
         <div className="max-w-4xl mx-auto px-6">
           <p className="text-center text-sm text-gray-500 dark:text-gray-400">
-            Para uso profesional de cardiólogos licenciados. No para diagnóstico de pacientes.
+            {t('home.footer')}
           </p>
         </div>
       </footer>

@@ -4,9 +4,9 @@ import { authOptions } from "@/lib/auth";
 import OpenAI from "openai";
 import { prisma } from "@/lib/prisma";
 
-const openai = new OpenAI({
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +14,13 @@ export async function POST(request: NextRequest) {
     
     if (!session) {
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+    }
+
+    if (!openai) {
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
+      );
     }
 
     const { messages, conversationId } = await request.json();
