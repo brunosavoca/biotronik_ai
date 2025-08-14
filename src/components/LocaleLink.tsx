@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { useCurrentLocale } from '@/hooks/useLocale';
 import { ReactNode } from 'react';
+import { LinkProps } from 'next/link';
 
-interface LocaleLinkProps {
+interface LocaleLinkProps extends Omit<LinkProps, 'href'> {
   href: string;
   children: ReactNode;
   className?: string;
-  [key: string]: any;
 }
 
 export default function LocaleLink({ href, children, ...props }: LocaleLinkProps) {
